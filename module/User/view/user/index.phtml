@@ -1,0 +1,16 @@
+
+
+<div class="list-group">
+    <?php foreach($users as $user){ ?>
+    <div>
+    <a href=<?= $this->url('user', ['action' => 'edit','id'=>$user["_id"]]) ?> class="list-group-item"><b>Email:</b><?php echo $user["email"]; ?> <br> <b>Name:</b><?php echo $user["name"]; ?> <br>(click to edit) </a> 
+    <a class="btn btn-danger btn-md" href=<?= $this->url('user', ['action' => 'delete','id'=>$user["_id"]]) ?>>delete</a>
+    </div>
+    <br>
+
+        
+    <?php } ?>
+    <a class="btn btn-success btn-large" href=<?= $this->url('user', ['action' => 'add']) ?>>Add New</a>
+ 
+  
+</div>
