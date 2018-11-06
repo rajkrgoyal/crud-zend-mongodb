@@ -1,17 +1,17 @@
-<?php 
+<?php
 
-if(!empty($error)){
-  foreach($error as $e){
-?>
+if (!empty($error)) {
+    foreach ($error as $e) {
+        ?>
 <br>
 <div class="alert alert-danger">
-<?php echo $e  ?>
+  <?php echo $e ?>
 </div>
 
-<?php  }} ?>
+<?php }}?>
 
-<form action=<?= $this->url('user', ['action' => 'update',"id"=>$user["_id"]]) ?> method="post" onsubmit="passValidator(event)">
-<div class="form-group">
+<form action=<?=$this->url('user', ['action' => 'update', "id" => $user["_id"]])?> method="post" onsubmit="passValidator(event)">
+  <div class="form-group">
     <label for="name">Name:</label>
     <input required type="name" class="form-control" id="name" name="name" value="<?php echo $user["name"] ?>">
   </div>
@@ -19,8 +19,8 @@ if(!empty($error)){
     <label for="email">Email address:</label>
     <input required type="email" class="form-control" id="email" name="email" value="<?php echo $user["email"] ?>">
   </div>
- 
- 
+
+
   <input  type="checkbox" name="pwd_checkbox" onclick="toggleNewPass(this)" value="1" >Change Password:
   <br>
   <div class="form-group" id="old_pass">

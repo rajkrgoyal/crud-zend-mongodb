@@ -1,24 +1,24 @@
-<?php 
-$email = (!empty($user))?$user["email"]:"";
-$name = (!empty($user))?$user["name"]:"";
-if(!empty($error)){
-  foreach($error as $e){
-?>
+<?php
+$email = (!empty($user)) ? $user["email"] : "";
+$name = (!empty($user)) ? $user["name"] : "";
+if (!empty($error)) {
+    foreach ($error as $e) {
+        ?>
 <br>
 <div class="alert alert-danger">
-<?php echo $e  ?>
+  <?php echo $e ?>
 </div>
 
-<?php  }} ?>
+<?php }}?>
 
-<form action=<?= $this->url('user', ['action' => 'add']) ?> method="post" onsubmit="passValidator(event)">
-<div class="form-group">
+<form action=<?=$this->url('user', ['action' => 'add'])?> method="post" onsubmit="passValidator(event)">
+  <div class="form-group">
     <label for="name">Name:</label>
-    <input required type="name" class="form-control" id="name" name="name" value="<?php echo $name;  ?>">
+    <input required type="name" class="form-control" id="name" name="name" value="<?php echo $name; ?>">
   </div>
   <div class="form-group">
     <label for="email">Email address:</label>
-    <input required type="email" class="form-control" id="email" name="email" value="<?php echo $email;  ?>">
+    <input required type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>">
   </div>
   <div class="form-group">
     <label for="pwd">Password:</label>
