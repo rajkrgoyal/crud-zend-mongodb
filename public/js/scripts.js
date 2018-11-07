@@ -35,3 +35,10 @@ function passValidator(event){
       event.preventDefault();
     }
   }
+
+  window.onload = function(){
+    if(!document.querySelector('#pwd_checkbox')){
+      return;
+    }
+    document.querySelector('#pwd_checkbox').checked=false;
+  }

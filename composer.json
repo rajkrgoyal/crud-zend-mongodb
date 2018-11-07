@@ -17,7 +17,9 @@
         "zendframework/zend-mvc": "^3.0.1",
         "zfcampus/zf-development-mode": "^3.0",
         "alcaeus/mongo-php-adapter": "^1.1",
-        "doctrine/mongodb-odm": "^1.2"
+        "doctrine/mongodb-odm": "^1.2",
+        "zendframework/zend-form": "^2.12",
+        "zendframework/zend-i18n": "^2.9"
     },
     "autoload": {
         "psr-4": {

@@ -10,29 +10,23 @@ if (!empty($error)) {
 
 <?php }}?>
 
-<form action=<?=$this->url('user', ['action' => 'update', "id" => $user["_id"]])?> method="post" onsubmit="passValidator(event)">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input required type="name" class="form-control" id="name" name="name" value="<?php echo $user["name"] ?>">
-  </div>
-  <div class="form-group">
-    <label for="email">Email address:</label>
-    <input required type="email" class="form-control" id="email" name="email" value="<?php echo $user["email"] ?>">
-  </div>
 
+<?php 
 
-  <input  type="checkbox" name="pwd_checkbox" onclick="toggleNewPass(this)" value="1" >Change Password:
-  <br>
-  <div class="form-group" id="old_pass">
-    <label for="pwd">Password:</label>
-    <input  type="password" class="form-control" id="opwd" name="opwd" minlength="6">
-  </div>
-  <div class="form-group" id="new_pass">
-    <label for="pwd">New Password:</label>
-    <input  type="password" class="form-control" id="npwd" name="npwd">
-  </div>
-  <br>
-
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
-
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('action',$this->url('user', ['action' => 'update', "id" => $user["_id"]]) );
+$form->setAttribute('method', 'post');
+echo $this->form()->openTag($form);
+echo $this->formRow($form->get('name'));
+echo $this->formRow($form->get('email'));
+echo '<label>'.$this->formRow($form->get('pwd_checkbox')).' Change Password</label>';
+echo '<div class="form-group" id="old_pass">';
+echo $this->formRow($form->get('opwd')->setAttribute('id','opwd')->setLabel("Old Password:"));
+echo '</div>';
+echo '<div class="form-group" id="new_pass">';
+echo $this->formRow($form->get('opwd')->setAttribute('name','npwd')->setAttribute('id','npwd')->setLabel("New Password:"));
+echo '</div>';
+echo $this->formRow($form->get('submit'));
+echo $this->form()->closeTag();
+ ?>

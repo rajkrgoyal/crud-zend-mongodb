@@ -39,3 +39,7 @@ div.container a.navbar-brand > img {
 #new_pass,#old_pass{
     display:none;
 }
+
+form label{
+    display: block;
+}

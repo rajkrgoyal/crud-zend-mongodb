@@ -12,6 +12,7 @@ use MongoDB;
 // require_once __DIR__.'/../../../../config/config.php';
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use User\Forms\UserForm;
 
 class IndexController extends AbstractActionController
 {
@@ -23,14 +24,6 @@ class IndexController extends AbstractActionController
             ->hydrate(false)
             ->getQuery()
             ->execute();
-        //print_r($users);
-        // $user = new User();
-        // $user->setId(new MongoDB\BSON\ObjectId());
-        // $user->setName("rohit");
-        // $user->setEmail("rs31622@gmail.com");
-        // $user->setPassword("Password");
-        // $dm->persist($user);
-        // $dm->flush();
         $contentView = new ViewModel(array("users" => $users));
         $contentView->setTemplate('user/index.phtml'); // path to phtml file under view folder
         return $contentView;
@@ -40,30 +33,39 @@ class IndexController extends AbstractActionController
     {
         $dm = (new Config())->getConnection();
         $request = $this->getRequest();
+        $userForm = new UserForm();
         if ($request->isPost()) {
             $email = $request->getPost('email');
             $error = [];
             $name = $request->getPost('name');
             $tempUser = ["name" => $name, "email" => $email];
+            if(!$userForm->isValid($request->getPost())){
+              $error = array_merge($error,$userForm->getErrors());
+            }
             $existing_user = $dm->createQueryBuilder('Document\User')->field('email')->equals($email)
                 ->getQuery()->execute()->count();
             if ($existing_user > 0) {
                 $error["email"] = "Email already Exists!";
-                $contentView = new ViewModel(["user" => $tempUser, "error" => $error]);
-                $contentView->setTemplate('user/create.phtml');
-                return $contentView;
             }
-            $password = password_hash($request->getPost('pwd'), PASSWORD_DEFAULT);
+            if(!empty($error)){
+              $userForm->setName($tempUser["name"]);
+              $userForm->setEmail($tempUser["email"]);
+              $contentView = new ViewModel(["error" => $error,"form"=>$userForm->form]);
+              $contentView->setTemplate('user/create.phtml');
+              return $contentView;
+            }
+            $password = password_hash($request->getPost('opwd'), PASSWORD_DEFAULT);
             $user = new User();
             $user->setId(new MongoDB\BSON\ObjectId());
             $user->setName($name);
             $user->setEmail($email);
             $user->setPassword($password);
             $dm->persist($user);
-            $dm->flush();
+            $dm->flush(); //save user to db
             return $this->redirect()->toRoute('user');
         } else {
-            $contentView = new ViewModel();
+            
+            $contentView = new ViewModel(array("form"=>$userForm->form));
             $contentView->setTemplate('user/create.phtml');
             // $id = $this->params()->fromRoute('id');
             return $contentView;
@@ -78,7 +80,10 @@ class IndexController extends AbstractActionController
         $user = $dm->createQueryBuilder('Document\User')->hydrate(false)->field('_id')->equals($id)
             ->getQuery()->execute();
         $user = iterator_to_array($user);
-        $contentView = new ViewModel(["user" => $user[$id]]);
+        $userForm = new UserForm();
+        $userForm->setName($user[$id]["name"]);
+        $userForm->setEmail($user[$id]["email"]);
+        $contentView = new ViewModel(["user" => $user[$id],"form"=>$userForm->form]);
         $contentView->setTemplate('user/update.phtml');
         return $contentView;
     }
@@ -99,8 +104,12 @@ class IndexController extends AbstractActionController
     {
         $dm = (new Config())->getConnection();
         $id = $this->params()->fromRoute('id');
+        $userForm = new UserForm();
         $request = $this->getRequest();
         $error = [];
+        if(!$userForm->isValid($request->getPost())){
+          $error = array_merge($error,$userForm->getErrors());
+        }
         $user = $dm->createQueryBuilder('Document\User')->hydrate(false)->field('_id')->equals($id)
             ->getQuery()->execute();
         $user = iterator_to_array($user)[$id];
@@ -138,7 +147,9 @@ class IndexController extends AbstractActionController
                 ->execute();
             return $this->redirect()->toRoute('user');
         } else {
-            $contentView = new ViewModel(["user" => $tempUser, "error" => $error]);
+            $userForm->setName($tempUser["name"]);
+            $userForm->setEmail($tempUser["email"]);
+            $contentView = new ViewModel(["error" => $error,"form"=>$userForm->form,"user"=>$tempUser]);
             $contentView->setTemplate('user/update.phtml');
 
             return $contentView;

@@ -2,27 +2,23 @@
 $email = (!empty($user)) ? $user["email"] : "";
 $name = (!empty($user)) ? $user["name"] : "";
 if (!empty($error)) {
-    foreach ($error as $e) {
-        ?>
-<br>
+foreach ($error as $e) {
+?>
 <div class="alert alert-danger">
   <?php echo $e ?>
 </div>
 
 <?php }}?>
+<?php 
 
-<form action=<?=$this->url('user', ['action' => 'add'])?> method="post" onsubmit="passValidator(event)">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input required type="name" class="form-control" id="name" name="name" value="<?php echo $name; ?>">
-  </div>
-  <div class="form-group">
-    <label for="email">Email address:</label>
-    <input required type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>">
-  </div>
-  <div class="form-group">
-    <label for="pwd">Password:</label>
-    <input required type="password" class="form-control" id="pwd" name="pwd" minlength="6">
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('action',$this->url('user', ['action' => 'add']) );
+$form->setAttribute('method', 'post');
+echo $this->form()->openTag($form);
+echo $this->formRow($form->get('name'));
+echo $this->formRow($form->get('email'));
+echo $this->formRow($form->get('opwd'));
+echo $this->formRow($form->get('submit'));
+echo $this->form()->closeTag();
+ ?>
